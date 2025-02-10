@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Click</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f7f3e9;
+    }
+
+    .cake {
+      position: relative;
+      width: 150px;
+      height: 150px;
+      background: url('https://cdn-icons-png.flaticon.com/512/2436/2436904.png') no-repeat center/contain;
+      cursor: pointer;
+    }
+
+    .score {
+      font-size: 24px;
+      margin: 10px 0;
+    }
+
+    .level {
+      font-size: 20px;
+      margin: 10px 0;
+    }
+
+    .progress-bar {
+      width: 80%;
+      height: 20px;
+      background-color: #ddd;
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 10px 0;
+    }
+
+    .progress {
+      height: 100%;
+      width: 0;
+      background-color: #ff8c00;
+      transition: width 0.3s ease;
+    }
+
+    .crumb {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: url('https://cdn-icons-png.flaticon.com/512/3036/3036984.png') no-repeat center/contain;
+      animation: fly 1s ease-out forwards;
+    }
+
+    @keyframes fly {
+      0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(calc(-100px + 200px * var(--rand-x)), calc(-100px + 200px * var(--rand-y))) scale(0.5);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Click!</h1>
+  <div class="score">Score: <span id="score">0</span></div>
+  <div class="level">Level: <span id="level">1</span></div>
+  <div class="progress-bar">
+    <div class="progress" id="progress"></div>
+  </div>
+  <div class="cake" id="cake"></div>
+
+  <script>
+    const cake = document.getElementById('cake');
+    const scoreDisplay = document.getElementById('score');
+    const levelDisplay = document.getElementById('level');
+    const progress = document.getElementById('progress');
+
+    let score = 0;
+    let level = 1;
+    const levelUpThreshold = 100;
+
+    cake.addEventListener('click', () => {
+
+      score += 10;
+      scoreDisplay.textContent = score;
+
+ 
+      level = Math.floor(score / levelUpThreshold) + 1;
+      levelDisplay.textContent = level;
+      const progressPercentage = ((score % levelUpThreshold) / levelUpThreshold) * 100;
+      progress.style.width = `${progressPercentage === 0 && score > 0 ? 100 : progressPercentage}%`;
+
+
+      const crumb = document.createElement('div');
+      crumb.classList.add('crumb');
+      crumb.style.setProperty('--rand-x', Math.random());
+      crumb.style.setProperty('--rand-y', Math.random());
+      cake.appendChild(crumb);
+
+
+      crumb.addEventListener('animationend', () => {
+        crumb.remove();
+      });
+    });
+  </script>
+</body>
+</html>
